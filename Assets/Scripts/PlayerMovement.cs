@@ -19,7 +19,7 @@ public class PlayerMovement : MonoBehaviour
 
 	[SerializeField]
 	private GameObject pot;
-	private bool isHoldingPot;
+	private bool isHoldingPot = true;
 
 	[SerializeField]
 	private GameObject paintGlob;
@@ -36,13 +36,22 @@ public class PlayerMovement : MonoBehaviour
     public float groundDistance = 0.4f;
     public LayerMask groundMask;
 
-    // Start is called before the first frame update
-    void Start()
+	//Lerp Info
+	private Vector3 startMarker;
+	private Vector3 endMarker;
+	private float t;
+
+
+
+
+	// Start is called before the first frame update
+	void Start()
     {
 		Debug.Assert(pot != null, "No pot attached to player");
+		ReAttachPot();
 
 		throwForce = GetComponent<PlayerMovement>().GetThrowForce();
-		paintGlob.SetActive(false);
+		//paintGlob.SetActive(false);
 		strokeLeft = maxStrokes;
 	}
 
@@ -84,28 +93,40 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-		if (Input.GetButtonDown("ThrowPot"))
-		{
-			if (isHoldingPot)
+		if (t < 0.1f) {
+			transform.position = Vector3.Lerp(startMarker, endMarker, t * 10.0f);
+			t += Time.deltaTime;
+		}
+		else {
+
+			if (Input.GetButtonDown("ThrowPot"))
 			{
-				//Throw pot
+				if (isHoldingPot)
+				{
+					//Throw pot
+					isHoldingPot = false;
+					pot.transform.parent = null;
 
-				pot.transform.parent = null;
+					pot.GetComponent<BoxCollider>().isTrigger = false;
+					pot.GetComponent<Rigidbody>().isKinematic = false;
 
-				pot.GetComponent<Rigidbody>().AddForce(GetComponentInChildren<Camera>().transform.forward * throwForce);
+					pot.GetComponent<Rigidbody>().AddForce(GetComponentInChildren<Camera>().transform.forward * throwForce);
+				}
+				else
+				{
+					//Teleport to pot
+					startMarker = transform.position;
+					endMarker = pot.transform.position;
+					t = 0.0f;
+	
+					ReAttachPot();
+				}
 			}
-			else
+			else if (Input.GetButtonDown("RegrabPot") && !isHoldingPot)
 			{
-				//Teleport to pot
-				transform.position = pot.transform.position;
 				ReAttachPot();
 			}
 		}
-		else if (Input.GetButtonDown("RegrabPot") && !isHoldingPot)
-		{
-			ReAttachPot();
-		}
-
 		if (isHoldingPot) strokeLeft = maxStrokes;
 
 		if (Input.GetButtonDown("Fire1") && !paintGlob.activeSelf && maxStrokes > 0)
@@ -119,6 +140,12 @@ public class PlayerMovement : MonoBehaviour
 
 	private void ReAttachPot()
 	{
+		Debug.Log("Get pot");
+		isHoldingPot = true;
+		pot.transform.parent = transform;
+		pot.transform.localPosition = new Vector3(0.0f, GetComponent<CharacterController>().height/2.0f, 0.0f);
+		pot.GetComponent<BoxCollider>().isTrigger = true;
+		pot.GetComponent<Rigidbody>().isKinematic = true;
 		//pot.transform.position = theBone.transform.position;
 		//pot.transform.parent = theBone.transform;
 	}
