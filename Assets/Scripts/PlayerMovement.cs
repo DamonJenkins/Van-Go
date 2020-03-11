@@ -9,8 +9,8 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField]
     private float speed = 12f,
-    maxSpeed = 12,
-    baseSpeed = 8,
+    maxSpeed = 12f,
+    baseSpeed = 8f,
     gravity = -25f,
     jumpHeight = 2f,
     acceleration = 0.5f,
@@ -20,6 +20,8 @@ public class PlayerMovement : MonoBehaviour
 	[SerializeField]
 	private GameObject pot;
 	private bool isHoldingPot = true;
+	[SerializeField]
+	private GameObject handBone;
 
 	[SerializeField]
 	private GameObject paintGlob;
@@ -39,15 +41,19 @@ public class PlayerMovement : MonoBehaviour
 	//Lerp Info
 	private Vector3 startMarker;
 	private Vector3 endMarker;
-	private float t;
+	private float t = 0.0f;
 
-
+	private Vector3 originalPotPos;
+	private Quaternion originalPotRot;
 
 
 	// Start is called before the first frame update
 	void Start()
     {
 		Debug.Assert(pot != null, "No pot attached to player");
+
+		originalPotPos = pot.transform.localPosition;
+		originalPotRot = pot.transform.localRotation;
 		ReAttachPot();
 
 		throwForce = GetComponent<PlayerMovement>().GetThrowForce();
@@ -67,7 +73,10 @@ public class PlayerMovement : MonoBehaviour
 
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
-        
+
+		bool shouldBeRunning = (Mathf.Abs(x) > 0.1f || Mathf.Abs(z) > 0.1f);
+
+		GetComponent<Animator>().SetBool("Running", shouldBeRunning);
 
         Vector3 move = ((transform.right * x) + transform.forward * z);
 
@@ -84,7 +93,9 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(move * speed * Time.deltaTime);
 
-        if(Input.GetButtonDown("Jump") && isGrounded)
+		GetComponent<Animator>().SetFloat("RunSpeed", speed/10.0f);
+
+		if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
@@ -93,11 +104,7 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-		if (t < 0.1f) {
-			transform.position = Vector3.Lerp(startMarker, endMarker, t * 10.0f);
-			t += Time.deltaTime;
-		}
-		else {
+		if(t >= 0.1f) {
 
 			if (Input.GetButtonDown("ThrowPot"))
 			{
@@ -127,23 +134,35 @@ public class PlayerMovement : MonoBehaviour
 				ReAttachPot();
 			}
 		}
+
 		if (isHoldingPot) strokeLeft = maxStrokes;
 
-		if (Input.GetButtonDown("Fire1") && !paintGlob.activeSelf && maxStrokes > 0)
+		if (Input.GetButtonDown("Fire1") && /*!paintGlob.activeSelf &&*/ maxStrokes > 0)
 		{
-			paintGlob.SetActive(true);
-			paintGlob.transform.position = paintBrush.transform.position;
-			paintGlob.GetComponent<Rigidbody>().velocity = GetComponentInChildren<Camera>().transform.forward * throwForce;
+			//paintGlob.SetActive(true);
+			//paintGlob.transform.position = paintBrush.transform.position;
+			//paintGlob.GetComponent<Rigidbody>().velocity = GetComponentInChildren<Camera>().transform.forward * throwForce;
 			strokeLeft--;
+
+			GetComponent<Animator>().SetTrigger("Fire");
+		}
+	}
+
+	private void FixedUpdate()
+	{
+		if (t < 0.1f) {
+			transform.position = Vector3.Lerp(startMarker, endMarker, t * 10.0f);
+			t += Time.deltaTime;
 		}
 	}
 
 	private void ReAttachPot()
 	{
-		Debug.Log("Get pot");
 		isHoldingPot = true;
-		pot.transform.parent = transform;
-		pot.transform.localPosition = new Vector3(0.0f, GetComponent<CharacterController>().height/2.0f, 0.0f);
+
+		pot.transform.parent = handBone.transform;
+		pot.transform.localPosition = originalPotPos;
+		pot.transform.localRotation = originalPotRot;
 		pot.GetComponent<BoxCollider>().isTrigger = true;
 		pot.GetComponent<Rigidbody>().isKinematic = true;
 		//pot.transform.position = theBone.transform.position;

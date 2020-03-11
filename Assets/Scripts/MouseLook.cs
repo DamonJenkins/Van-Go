@@ -28,9 +28,5 @@ public class MouseLook : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
         playerPos.Rotate(Vector3.up * mouseX);
-
-		playerPos.Find("FpsArms").Rotate(Vector3.left * mouseY * 0.95f);
-        
-
     }
 }
