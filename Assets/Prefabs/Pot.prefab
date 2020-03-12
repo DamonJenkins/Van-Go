@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4609164598950526222}
   - component: {fileID: 3096203636401567105}
   - component: {fileID: 890040904968453108}
-  - component: {fileID: 4571482353891768004}
   m_Layer: 9
   m_Name: Pot
   m_TagString: Untagged
@@ -111,16 +110,3 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.21053444, y: 0.25632542, z: 0.21053444}
   m_Center: {x: 0, y: -0.025217451, z: 0}
---- !u!114 &4571482353891768004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7478327695369799467}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f93d49c8c74a17b408f2fcf75736ec45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  previousOffsetFromPortal: {x: 0, y: 0, z: 0}

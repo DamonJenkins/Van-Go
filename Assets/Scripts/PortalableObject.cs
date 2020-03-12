@@ -9,8 +9,18 @@ public class PortalableObject : MonoBehaviour
     // Start is called before the first frame update
     public virtual void Teleport(Transform fromPortal, Transform toPortal, Vector3 pos, Quaternion rot)
     {
+        CharacterController charCon = GetComponent<CharacterController>();
+
+        if (charCon != null) {
+            charCon.enabled = false;
+        }
+
         transform.position = pos;
         transform.rotation = rot;
+
+        if (charCon != null) {
+            charCon.enabled = true;
+        }
     }
 
     public virtual void EnterPortalThreshold()

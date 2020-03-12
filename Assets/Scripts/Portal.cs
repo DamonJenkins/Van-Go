@@ -23,6 +23,19 @@ public class Portal : MonoBehaviour
         screen.material.SetInt("displayMask", 1);
 
         trackedTravellers = new List<PortalableObject>();
+        ProtectScreenFromClipping();
+    }
+
+    void ProtectScreenFromClipping()
+    {
+        float halfHeight = playerCam.nearClipPlane * Mathf.Tan(playerCam.fieldOfView * 0.5f * Mathf.Deg2Rad);
+        float halfWidth = halfHeight * playerCam.aspect;
+        float dstToNearClipPlaneCorner = new Vector3(halfWidth, halfHeight, playerCam.nearClipPlane).magnitude;
+
+        Transform screenT = screen.transform;
+        bool camFacingSameDirAsPortal = Vector3.Dot(transform.forward, transform.position - playerCam.transform.position) > 0;
+        screenT.localScale = new Vector3(screenT.localScale.x, screenT.localScale.y, dstToNearClipPlaneCorner);
+        screenT.localPosition = Vector3.forward * dstToNearClipPlaneCorner * ((camFacingSameDirAsPortal) ? 0.5f : -0.5f);
     }
 
     private void LateUpdate()
