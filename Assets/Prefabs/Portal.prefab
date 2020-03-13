@@ -141,6 +141,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   linkedPortal: {fileID: 0}
   screen: {fileID: 3335283519899898446}
+  activeMat: {fileID: 2100000, guid: 8d8bb3578a426384e98fcb59adfc7893, type: 2}
+  inactiveMat: {fileID: 2100000, guid: bc7f6024b90b5ed40a7bbb04c34a95b4, type: 2}
+  activated: 1
 --- !u!54 &5448974172888929056
 Rigidbody:
   m_ObjectHideFlags: 0

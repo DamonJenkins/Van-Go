@@ -146,6 +146,10 @@ public class PlayerMovement : MonoBehaviour
 
 			GetComponent<Animator>().SetTrigger("Fire");
 		}
+
+		if (Input.GetKeyDown(KeyCode.Return)) {
+			FindObjectsOfType<Portal>()[0].activated = !FindObjectsOfType<Portal>()[0].activated;
+		}
 	}
 
 	private void FixedUpdate()

@@ -12,6 +12,14 @@ public class Portal : MonoBehaviour
     RenderTexture viewTexture;
     MeshFilter screenMeshFilter;
 
+
+	[SerializeField]
+	Material activeMat;
+	[SerializeField]
+	Material inactiveMat;
+
+	public bool activated = true;
+
     List<PortalableObject> trackedTravellers;
 
     void Awake()
@@ -19,8 +27,6 @@ public class Portal : MonoBehaviour
         playerCam = GameObject.Find("MainCamera").GetComponent<Camera>();
         portalCam = GetComponentInChildren<Camera>();
         portalCam.enabled = false;
-
-        screen.material.SetInt("displayMask", 1);
 
         trackedTravellers = new List<PortalableObject>();
         ProtectScreenFromClipping();
@@ -40,6 +46,14 @@ public class Portal : MonoBehaviour
 
     private void LateUpdate()
     {
+		if ((screen.material == activeMat) != activated)
+		{
+			screen.material = activated ? activeMat : inactiveMat;
+			GetComponentInChildren<BoxCollider>().isTrigger = activated;
+		}
+
+		if (!activated) return;
+
         for (int i = 0; i < trackedTravellers.Count; i++) {
             PortalableObject traveller = trackedTravellers[i];
             Transform travellerT = traveller.transform;
@@ -82,6 +96,8 @@ public class Portal : MonoBehaviour
 
     public void Render()
     {
+		if (!activated) return;
+
         if (!CameraUtility.VisibleFromCamera(linkedPortal.screen, playerCam))
         {
             return;
