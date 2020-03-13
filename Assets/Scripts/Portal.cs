@@ -19,6 +19,7 @@ public class Portal : MonoBehaviour
 	Material inactiveMat;
 
 	public bool activated = true;
+	bool wasActivated = true;
 
     List<PortalableObject> trackedTravellers;
 
@@ -46,13 +47,15 @@ public class Portal : MonoBehaviour
 
     private void LateUpdate()
     {
-		if ((screen.material == activeMat) != activated)
-		{
-			screen.material = activated ? activeMat : inactiveMat;
-			GetComponentInChildren<BoxCollider>().isTrigger = activated;
-		}
+        if (wasActivated != activated)
+        {
+            screen.material = activated ? activeMat : inactiveMat;
+            GetComponentInChildren<BoxCollider>().isTrigger = activated;
 
-		if (!activated) return;
+            wasActivated = activated;
+        }
+
+        if (!activated) return;
 
         for (int i = 0; i < trackedTravellers.Count; i++) {
             PortalableObject traveller = trackedTravellers[i];
@@ -83,14 +86,14 @@ public class Portal : MonoBehaviour
             {
                 viewTexture.Release();
             }
+
+
+            viewTexture = new RenderTexture(Screen.width, Screen.height, 0);
+
+            portalCam.targetTexture = viewTexture;
+
+            linkedPortal.screen.material.SetTexture("_MainTex", viewTexture);
         }
-
-        viewTexture = new RenderTexture(Screen.width, Screen.height, 0);
-
-        portalCam.targetTexture = viewTexture;
-
-        linkedPortal.screen.material.SetTexture("_MainTex", viewTexture);
-
     }
 
 
