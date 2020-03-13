@@ -25,11 +25,11 @@ public class PortalableObject : MonoBehaviour
 
     public virtual void EnterPortalThreshold()
     {
-
+        
     }
 
     public virtual void ExitPortalThreshold()
     {
-
+        
     }
 }

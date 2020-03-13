@@ -27,6 +27,7 @@ public class Portal : MonoBehaviour
     {
         playerCam = GameObject.Find("MainCamera").GetComponent<Camera>();
         portalCam = GetComponentInChildren<Camera>();
+        portalCam.fieldOfView = playerCam.fieldOfView;
         portalCam.enabled = false;
 
         trackedTravellers = new List<PortalableObject>();

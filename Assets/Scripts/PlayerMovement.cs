@@ -43,6 +43,8 @@ public class PlayerMovement : MonoBehaviour
 	private Vector3 endMarker;
 	private float t = 0.0f;
 
+    private float timerLimit = 0.05f;
+
 	private Vector3 originalPotPos;
 	private Quaternion originalPotRot;
 
@@ -104,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-		if(t >= 0.1f) {
+		if(t >= timerLimit) {
 
 			if (Input.GetButtonDown("ThrowPot"))
 			{
@@ -121,12 +123,16 @@ public class PlayerMovement : MonoBehaviour
 				}
 				else
 				{
-					//Teleport to pot
-					startMarker = transform.position;
-					endMarker = pot.transform.position;
-					t = 0.0f;
-	
-					ReAttachPot();
+                    //Teleport to pot
+                    startMarker = transform.position;
+                    endMarker = pot.transform.position;
+                    t = 0.0f;
+
+                    //controller.enabled = false;
+                    //transform.position = pot.transform.position;
+                    //controller.enabled = true;
+
+                    ReAttachPot();
 				}
 			}
 			else if (Input.GetButtonDown("RegrabPot") && !isHoldingPot)
@@ -154,8 +160,8 @@ public class PlayerMovement : MonoBehaviour
 
 	private void FixedUpdate()
 	{
-		if (t < 0.1f) {
-			transform.position = Vector3.Lerp(startMarker, endMarker, t * 10.0f);
+		if (t < timerLimit) {
+			transform.position = Vector3.Lerp(startMarker, endMarker, t * (1.0f / timerLimit));
 			t += Time.deltaTime;
 		}
 	}
