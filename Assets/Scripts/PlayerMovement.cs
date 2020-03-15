@@ -43,6 +43,8 @@ public class PlayerMovement : MonoBehaviour
 	private Vector3 endMarker;
 	private float t = 0.0f;
 
+    private float timerLimit = 0.05f;
+
 	private Vector3 originalPotPos;
 	private Quaternion originalPotRot;
 
@@ -104,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-		if(t >= 0.1f) {
+		if(t > timerLimit) {
 
 			if (Input.GetButtonDown("ThrowPot"))
 			{
@@ -116,17 +118,25 @@ public class PlayerMovement : MonoBehaviour
 
 					pot.GetComponent<BoxCollider>().isTrigger = false;
 					pot.GetComponent<Rigidbody>().isKinematic = false;
+					pot.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
+					pot.GetComponent<PortalableObject>().enabled = true;
 
 					pot.GetComponent<Rigidbody>().AddForce(GetComponentInChildren<Camera>().transform.forward * throwForce);
 				}
 				else
 				{
-					//Teleport to pot
-					startMarker = transform.position;
-					endMarker = pot.transform.position;
+                    //Teleport to pot
+                    startMarker = transform.position;
+                    endMarker = pot.transform.position;
+					transform.rotation = (transform.rotation * pot.GetComponent<PortalableObject>().portalRot).normalized;
 					t = 0.0f;
-	
-					ReAttachPot();
+
+                    //controller.enabled = false;
+                    //transform.position = pot.transform.position;
+                    //controller.enabled = true;
+
+
+                    ReAttachPot();
 				}
 			}
 			else if (Input.GetButtonDown("RegrabPot") && !isHoldingPot)
@@ -146,12 +156,19 @@ public class PlayerMovement : MonoBehaviour
 
 			GetComponent<Animator>().SetTrigger("Fire");
 		}
+
+		if (Input.GetKeyDown(KeyCode.Return))
+		{
+			FindObjectsOfType<Portal>()[1].ToggleActive();
+			//FindObjectsOfType<Portal>()[0].SwitchTarget(FindObjectsOfType<Portal>()[2]);
+		}
 	}
+
 
 	private void FixedUpdate()
 	{
-		if (t < 0.1f) {
-			transform.position = Vector3.Lerp(startMarker, endMarker, t * 10.0f);
+		if (t <= timerLimit) {
+			transform.position = Vector3.Lerp(startMarker, endMarker, Mathf.Clamp(t * (1.2f / timerLimit), 0.0f, 1.0f));
 			t += Time.deltaTime;
 		}
 	}
@@ -164,9 +181,10 @@ public class PlayerMovement : MonoBehaviour
 		pot.transform.localPosition = originalPotPos;
 		pot.transform.localRotation = originalPotRot;
 		pot.GetComponent<BoxCollider>().isTrigger = true;
+		pot.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 		pot.GetComponent<Rigidbody>().isKinematic = true;
-		//pot.transform.position = theBone.transform.position;
-		//pot.transform.parent = theBone.transform;
+		pot.GetComponent<PortalableObject>().enabled = false;
+		pot.GetComponent<PortalableObject>().portalRot = Quaternion.identity;
 	}
 
 	public float GetThrowForce()
