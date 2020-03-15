@@ -149,9 +149,10 @@ public class PlayerMovement : MonoBehaviour
 
 		if (Input.GetButtonDown("Fire1") && /*!paintGlob.activeSelf &&*/ maxStrokes > 0)
 		{
-			//paintGlob.SetActive(true);
-			//paintGlob.transform.position = paintBrush.transform.position;
-			//paintGlob.GetComponent<Rigidbody>().velocity = GetComponentInChildren<Camera>().transform.forward * throwForce;
+			paintGlob.SetActive(true);
+			paintGlob.transform.position = paintBrush.transform.position;
+			paintGlob.GetComponent<Rigidbody>().velocity = Vector3.zero;
+			paintGlob.GetComponent<Rigidbody>().AddForce(GetComponentInChildren<Camera>().transform.forward * throwForce);
 			strokeLeft--;
 
 			GetComponent<Animator>().SetTrigger("Fire");
