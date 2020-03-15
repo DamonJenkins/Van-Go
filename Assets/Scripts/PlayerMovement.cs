@@ -106,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
 
         controller.Move(velocity * Time.deltaTime);
 
-		if(t >= timerLimit) {
+		if(t > timerLimit) {
 
 			if (Input.GetButtonDown("ThrowPot"))
 			{
@@ -118,6 +118,8 @@ public class PlayerMovement : MonoBehaviour
 
 					pot.GetComponent<BoxCollider>().isTrigger = false;
 					pot.GetComponent<Rigidbody>().isKinematic = false;
+					pot.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
+					pot.GetComponent<PortalableObject>().enabled = true;
 
 					pot.GetComponent<Rigidbody>().AddForce(GetComponentInChildren<Camera>().transform.forward * throwForce);
 				}
@@ -126,11 +128,13 @@ public class PlayerMovement : MonoBehaviour
                     //Teleport to pot
                     startMarker = transform.position;
                     endMarker = pot.transform.position;
-                    t = 0.0f;
+					transform.rotation = (transform.rotation * pot.GetComponent<PortalableObject>().portalRot).normalized;
+					t = 0.0f;
 
                     //controller.enabled = false;
                     //transform.position = pot.transform.position;
                     //controller.enabled = true;
+
 
                     ReAttachPot();
 				}
@@ -153,15 +157,18 @@ public class PlayerMovement : MonoBehaviour
 			GetComponent<Animator>().SetTrigger("Fire");
 		}
 
-		if (Input.GetKeyDown(KeyCode.Return)) {
-			FindObjectsOfType<Portal>()[0].activated = !FindObjectsOfType<Portal>()[0].activated;
+		if (Input.GetKeyDown(KeyCode.Return))
+		{
+			FindObjectsOfType<Portal>()[1].ToggleActive();
+			//FindObjectsOfType<Portal>()[0].SwitchTarget(FindObjectsOfType<Portal>()[2]);
 		}
 	}
 
+
 	private void FixedUpdate()
 	{
-		if (t < timerLimit) {
-			transform.position = Vector3.Lerp(startMarker, endMarker, t * (1.0f / timerLimit));
+		if (t <= timerLimit) {
+			transform.position = Vector3.Lerp(startMarker, endMarker, Mathf.Clamp(t * (1.2f / timerLimit), 0.0f, 1.0f));
 			t += Time.deltaTime;
 		}
 	}
@@ -174,9 +181,10 @@ public class PlayerMovement : MonoBehaviour
 		pot.transform.localPosition = originalPotPos;
 		pot.transform.localRotation = originalPotRot;
 		pot.GetComponent<BoxCollider>().isTrigger = true;
+		pot.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousSpeculative;
 		pot.GetComponent<Rigidbody>().isKinematic = true;
-		//pot.transform.position = theBone.transform.position;
-		//pot.transform.parent = theBone.transform;
+		pot.GetComponent<PortalableObject>().enabled = false;
+		pot.GetComponent<PortalableObject>().portalRot = Quaternion.identity;
 	}
 
 	public float GetThrowForce()

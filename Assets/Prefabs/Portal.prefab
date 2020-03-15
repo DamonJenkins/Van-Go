@@ -91,7 +91,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 1, z: 3}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &3335283520042163669
 GameObject:
@@ -143,7 +143,6 @@ MonoBehaviour:
   screen: {fileID: 3335283519899898446}
   activeMat: {fileID: 2100000, guid: 8d8bb3578a426384e98fcb59adfc7893, type: 2}
   inactiveMat: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
-  activated: 1
 --- !u!54 &5448974172888929056
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -159,7 +158,7 @@ Rigidbody:
   m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!1 &6206379642390830810
 GameObject:
   m_ObjectHideFlags: 0

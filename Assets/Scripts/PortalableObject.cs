@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PortalableObject : MonoBehaviour
 {
+    public Quaternion portalRot;
     public Vector3 previousOffsetFromPortal;
 
     // Start is called before the first frame update
@@ -17,6 +18,13 @@ public class PortalableObject : MonoBehaviour
 
         transform.position = pos;
         transform.rotation = rot;
+        portalRot = toPortal.rotation;
+
+        Rigidbody rb = GetComponent<Rigidbody>();
+
+        if (rb){
+            rb.velocity = toPortal.rotation * (Quaternion.Inverse(fromPortal.rotation) * rb.velocity);
+        }
 
         if (charCon != null) {
             charCon.enabled = true;

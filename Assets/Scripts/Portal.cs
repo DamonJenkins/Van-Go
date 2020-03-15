@@ -18,8 +18,7 @@ public class Portal : MonoBehaviour
 	[SerializeField]
 	Material inactiveMat;
 
-	public bool activated = true;
-	bool wasActivated = true;
+	bool activated = true;
 
     List<PortalableObject> trackedTravellers;
 
@@ -48,34 +47,33 @@ public class Portal : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (wasActivated != activated)
-        {
-            screen.material = activated ? activeMat : inactiveMat;
-            GetComponentInChildren<BoxCollider>().isTrigger = activated;
-
-            wasActivated = activated;
-        }
-
         if (!activated) return;
+
+        if (linkedPortal == null) {
+            Deactivate();
+            return;
+        }
 
         for (int i = 0; i < trackedTravellers.Count; i++) {
             PortalableObject traveller = trackedTravellers[i];
             Transform travellerT = traveller.transform;
 
             Vector3 offsetFromPortal = travellerT.position - transform.position;
-            int portalSide = System.Math.Sign(Vector3.Dot(offsetFromPortal, transform.forward));
-            int portalSideOld = System.Math.Sign(Vector3.Dot(traveller.previousOffsetFromPortal, transform.forward));
+            int portalSide = System.Math.Sign(Vector3.Dot(transform.forward, offsetFromPortal));
+            int portalSideOld = System.Math.Sign(Vector3.Dot(transform.forward, traveller.previousOffsetFromPortal));
 
-            if (portalSide != portalSideOld) {
+            if (portalSide != portalSideOld && traveller.enabled)
+            {
                 Matrix4x4 m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
                 traveller.Teleport(transform, linkedPortal.transform, m.GetColumn(3), m.rotation);
 
-                linkedPortal.OnTravellerEnterPortal(traveller);
+                //linkedPortal.OnTravellerEnterPortal(traveller);
                 trackedTravellers.RemoveAt(i);
                 i--;
             }
-
-            traveller.previousOffsetFromPortal = offsetFromPortal;
+            else {
+                traveller.previousOffsetFromPortal = offsetFromPortal;
+            }
         }
     }
 
@@ -87,7 +85,6 @@ public class Portal : MonoBehaviour
             {
                 viewTexture.Release();
             }
-
 
             viewTexture = new RenderTexture(Screen.width, Screen.height, 0);
 
@@ -146,5 +143,37 @@ public class Portal : MonoBehaviour
             traveller.ExitPortalThreshold();
             trackedTravellers.Remove(traveller);
         }
+    }
+
+    public bool ToggleActive(){
+        if (activated) Deactivate();
+        else Activate();
+
+        return activated;
+    }
+
+    public void Activate() {
+        activated = true;
+
+        linkedPortal.RefreshTexture();
+
+        screen.material = activeMat;
+        GetComponentInChildren<BoxCollider>().isTrigger = true;
+    }
+
+    public void Deactivate() {
+        activated = false;
+
+        screen.material = inactiveMat;
+        GetComponentInChildren<BoxCollider>().isTrigger = false;
+    }
+
+    public void SwitchTarget(Portal _newPortal) {
+        linkedPortal = _newPortal;
+        Activate();
+    }
+
+    public void RefreshTexture() {
+        Destroy(viewTexture);
     }
 }

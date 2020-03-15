@@ -1,9 +1,5 @@
 ﻿Shader "Custom/PortalShader"
 {
-    Properties
-    {
-        _InactiveColour("Inactive Colour", Color) = (1, 1, 1, 1)
-    }
         SubShader
     {
         Tags { "RenderType" = "Opaque" }
@@ -28,8 +24,6 @@
 
             sampler2D _MainTex;
             float4 _InactiveColour;
-            int displayMask; // set to 1 to display texture, otherwise will draw test colour
-
 
             v2f vert(appdata v) {
                 v2f o;
