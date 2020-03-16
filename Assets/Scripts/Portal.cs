@@ -42,7 +42,7 @@ public class Portal : MonoBehaviour
 
         playerCam = GameObject.Find("MainCamera").GetComponent<Camera>();
         portalCam = GetComponentInChildren<Camera>();
-        portalCam.fieldOfView = playerCam.fieldOfView;
+        portalCam.fieldOfView = PlayerPrefs.GetFloat("fieldOfView", playerCam.fieldOfView);
         portalCam.enabled = false;
 
         trackedTravellers = new List<PortalableObject>();
@@ -221,6 +221,6 @@ public class Portal : MonoBehaviour
 
     private void UpdateFOV() {
         Debug.Log(name);
-        portalCam.fieldOfView = playerCam.fieldOfView;
+        portalCam.fieldOfView = PlayerPrefs.GetFloat("fieldOfView", playerCam.fieldOfView);
     }
 }
