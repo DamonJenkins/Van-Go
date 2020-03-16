@@ -6,17 +6,17 @@ using UnityEngine;
 public class Paintable : MonoBehaviour
 {
 
-    MeshRenderer renderer;
+    MeshRenderer obj_renderer;
     [SerializeField]
-    Texture tex_unpainted, tex_painted;
+    Material mat_unpainted, mat_painted;
 
     bool painted = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        renderer = GetComponent<MeshRenderer>();
-        renderer.material.SetTexture("_MainTex", tex_unpainted);
+        obj_renderer = GetComponent<MeshRenderer>();
+        obj_renderer.material= mat_unpainted;
     }
 
     // Update is called once per frame
@@ -25,19 +25,13 @@ public class Paintable : MonoBehaviour
 
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.transform.tag == "paintGlob")
-        {
-            painted = true;
-            renderer.material.SetTexture("_MainTex", tex_painted);
-            collision.transform.gameObject.SetActive(false);
-            //TODO: add particle splat
-        }
-    }
-
     public bool IsPainted(){
         return painted;
     }
 
+    public void Paint()
+    {
+        painted = true;
+        obj_renderer.material = mat_painted;
+    }
 }
