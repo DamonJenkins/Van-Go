@@ -8,8 +8,10 @@ public class Portal : MonoBehaviour
     Portal linkedPortal;
     [SerializeField]
     public MeshRenderer screen;
-    Camera playerCam, portalCam;
-    RenderTexture viewTexture;
+    Camera playerCam;
+    public Camera portalCam;
+    public RenderTexture viewTexture;
+    public RenderTexture camTexture;
     MeshFilter screenMeshFilter;
 
 
@@ -81,6 +83,18 @@ public class Portal : MonoBehaviour
 
     void CreateViewTexture()
     {
+        if (linkedPortal.camTexture == null || linkedPortal.camTexture.width != Screen.width || linkedPortal.camTexture.height != Screen.height)
+        {
+            if (linkedPortal.camTexture != null)
+            {
+                linkedPortal.camTexture.Release();
+            }
+
+            linkedPortal.camTexture = new RenderTexture(Screen.width, Screen.height, 0);
+
+            linkedPortal.portalCam.targetTexture = linkedPortal.camTexture;
+        }
+
         if (viewTexture == null || viewTexture.width != Screen.width || viewTexture.height != Screen.height)
         {
             if (viewTexture != null)
@@ -92,7 +106,7 @@ public class Portal : MonoBehaviour
 
             portalCam.targetTexture = viewTexture;
 
-            linkedPortal.screen.material.SetTexture("_MainTex", viewTexture);
+            screen.material.SetTexture("_MainTex", viewTexture);
         }
     }
 
@@ -101,20 +115,22 @@ public class Portal : MonoBehaviour
     {
         if (linkedPortal == null) return;
 
-        if (!CameraUtility.VisibleFromCamera(linkedPortal.screen, playerCam))
+        if (!CameraUtility.VisibleFromCamera(screen, playerCam))
         {
             return;
         }
 
-        screen.enabled = false;
+        linkedPortal.screen.enabled = false;
         CreateViewTexture();
 
-        Matrix4x4 m = transform.localToWorldMatrix * linkedPortal.transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
-        portalCam.transform.SetPositionAndRotation(m.GetColumn(3), m.rotation);
+        Matrix4x4 m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
+        linkedPortal.portalCam.transform.SetPositionAndRotation(m.GetColumn(3), m.rotation);
 
-        portalCam.Render();
+        linkedPortal.portalCam.Render();
 
-        screen.enabled = true;
+        Graphics.Blit(linkedPortal.portalCam.targetTexture, viewTexture);
+
+        linkedPortal.screen.enabled = true;
     }
 
 
@@ -174,6 +190,9 @@ public class Portal : MonoBehaviour
 
     public void SwitchTarget(Portal _newPortal) {
         linkedPortal = _newPortal;
+
+        screen.material.SetTexture("_MainTex", linkedPortal.viewTexture);
+
         Activate();
     }
 
