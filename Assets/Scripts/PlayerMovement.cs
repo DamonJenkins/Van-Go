@@ -160,7 +160,7 @@ public class PlayerMovement : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Return))
 		{
-			FindObjectsOfType<Portal>()[2].ToggleActive();
+			Portal.UpdatePortalFOV();
 		}
 	}
 

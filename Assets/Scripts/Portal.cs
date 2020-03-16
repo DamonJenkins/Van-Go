@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Portal : MonoBehaviour
 {
+    static List<Portal> allPortals;
+
+    public static void UpdatePortalFOV() {
+        for (int i = 0; i < allPortals.Count; i++) {
+            allPortals[i].UpdateFOV();
+        }
+    }
+
     [SerializeField]
     Portal linkedPortal;
     [SerializeField]
@@ -26,8 +34,12 @@ public class Portal : MonoBehaviour
 
     List<PortalableObject> trackedTravellers;
 
-    void Awake()
+    void Start()
     {
+        if (allPortals == null) {
+            allPortals = new List<Portal>();
+        }
+
         playerCam = GameObject.Find("MainCamera").GetComponent<Camera>();
         portalCam = GetComponentInChildren<Camera>();
         portalCam.fieldOfView = playerCam.fieldOfView;
@@ -35,6 +47,8 @@ public class Portal : MonoBehaviour
 
         trackedTravellers = new List<PortalableObject>();
         ProtectScreenFromClipping();
+
+        allPortals.Add(this);
     }
 
     void ProtectScreenFromClipping()
@@ -165,6 +179,11 @@ public class Portal : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        allPortals.Remove(this);
+    }
+
     public bool ToggleActive(){
         if (activated) Deactivate();
         else Activate();
@@ -198,5 +217,10 @@ public class Portal : MonoBehaviour
 
     public void RefreshTexture() {
         Destroy(viewTexture);
+    }
+
+    private void UpdateFOV() {
+        Debug.Log(name);
+        portalCam.fieldOfView = playerCam.fieldOfView;
     }
 }

@@ -34,12 +34,12 @@ public class PaintPot : MonoBehaviour
         else {
             reticle.SetActive(false);
 
-            Vector3 potPos = playerCam.WorldToScreenPoint(transform.position);
-            RectTransform posRect = potIcon.GetComponent<RectTransform>();
+            //Vector3 potPos = playerCam.WorldToScreenPoint(transform.position);
+            //RectTransform posRect = potIcon.GetComponent<RectTransform>();
 
-            potIcon.SetActive(potPos.z > 0 && drawIcon);
-            potPos.z = posRect.position.z;
-            posRect.position = potPos;
+            //potIcon.SetActive(potPos.z > 0 && drawIcon);
+            //potPos.z = posRect.position.z;
+            //posRect.position = potPos;
         }
     }
 
