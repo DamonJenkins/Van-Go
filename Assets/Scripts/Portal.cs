@@ -20,6 +20,8 @@ public class Portal : MonoBehaviour
 
 	bool activated = true;
 
+    int testing = 1;
+
     List<PortalableObject> trackedTravellers;
 
     void Awake()
@@ -97,7 +99,7 @@ public class Portal : MonoBehaviour
 
     public void Render()
     {
-		if (!activated) return;
+        if (linkedPortal == null) return;
 
         if (!CameraUtility.VisibleFromCamera(linkedPortal.screen, playerCam))
         {
@@ -114,6 +116,8 @@ public class Portal : MonoBehaviour
 
         screen.enabled = true;
     }
+
+
 
     void OnTravellerEnterPortal(PortalableObject traveller)
     {

@@ -159,8 +159,7 @@ public class PlayerMovement : MonoBehaviour
 
 		if (Input.GetKeyDown(KeyCode.Return))
 		{
-			FindObjectsOfType<Portal>()[1].ToggleActive();
-			//FindObjectsOfType<Portal>()[0].SwitchTarget(FindObjectsOfType<Portal>()[2]);
+			FindObjectsOfType<Portal>()[2].ToggleActive();
 		}
 	}
 
@@ -175,6 +174,9 @@ public class PlayerMovement : MonoBehaviour
 
 	private void ReAttachPot()
 	{
+
+		pot.GetComponent<PaintPot>().drawIcon = false;
+
 		isHoldingPot = true;
 
 		pot.transform.parent = handBone.transform;
