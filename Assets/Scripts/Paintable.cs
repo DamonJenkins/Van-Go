@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(MeshRenderer))]
 public class Paintable : MonoBehaviour
@@ -9,6 +10,8 @@ public class Paintable : MonoBehaviour
     MeshRenderer obj_renderer;
     [SerializeField]
     Material mat_unpainted, mat_painted;
+
+    public UnityEvent managerEvent;
 
     bool painted = false;
 
@@ -33,5 +36,6 @@ public class Paintable : MonoBehaviour
     {
         painted = true;
         obj_renderer.material = mat_painted;
+        managerEvent.Invoke();
     }
 }

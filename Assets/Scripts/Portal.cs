@@ -28,9 +28,8 @@ public class Portal : MonoBehaviour
 	[SerializeField]
 	Material inactiveMat;
 
+    [SerializeField]
 	bool activated = true;
-
-    int testing = 1;
 
     List<PortalableObject> trackedTravellers;
 
@@ -49,6 +48,8 @@ public class Portal : MonoBehaviour
         ProtectScreenFromClipping();
 
         allPortals.Add(this);
+
+        if (!activated) Deactivate();
     }
 
     void ProtectScreenFromClipping()
@@ -120,7 +121,7 @@ public class Portal : MonoBehaviour
 
             portalCam.targetTexture = viewTexture;
 
-            screen.material.SetTexture("_MainTex", viewTexture);
+            if (activated) screen.material.SetTexture("_MainTex", viewTexture);
         }
     }
 
@@ -194,7 +195,7 @@ public class Portal : MonoBehaviour
     public void Activate() {
         activated = true;
 
-        linkedPortal.RefreshTexture();
+        RefreshTexture();
 
         screen.material = activeMat;
         GetComponentInChildren<BoxCollider>().isTrigger = true;
