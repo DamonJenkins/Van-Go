@@ -20,13 +20,12 @@ public class settingsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        UpdateEffectVolumeFields(PlayerPrefs.GetFloat("effectVolume"));
-        UpdateMasterVolumeFields(PlayerPrefs.GetFloat("masterVolume"));
-        UpdateMusicVolumeFields(PlayerPrefs.GetFloat("musicVolume"));
-        UpdateSensitivityFields(PlayerPrefs.GetFloat("sensitivity"));
-        UpdateFieldOfViewFields(PlayerPrefs.GetFloat("fieldOfView"));
-        UpdateShowTimerField(PlayerPrefs.GetInt("showTimer") == 1);
+        UpdateEffectVolumeFields(PlayerPrefs.GetFloat("effectVolume", 1.0f));
+        UpdateMasterVolumeFields(PlayerPrefs.GetFloat("masterVolume", 1.0f));
+        UpdateMusicVolumeFields(PlayerPrefs.GetFloat("musicVolume", 1.0f));
+        UpdateSensitivityFields(PlayerPrefs.GetFloat("sensitivity", 1.0f));
+        UpdateFieldOfViewFields(PlayerPrefs.GetFloat("fieldOfView", 80.0f));
+        UpdateShowTimerField(PlayerPrefs.GetInt("showTimer", 1) == 1);
         Tween t = fadePanel.DOFade(0.0f, 0.5f).SetEase(Ease.InOutCubic);
         DOTween.Play(t);
     }
