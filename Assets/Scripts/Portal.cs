@@ -7,6 +7,7 @@ public class Portal : MonoBehaviour
     static List<Portal> allPortals;
 
     public static void UpdatePortalFOV() {
+		if (allPortals == null) return;
         for (int i = 0; i < allPortals.Count; i++) {
             allPortals[i].UpdateFOV();
         }
@@ -28,9 +29,8 @@ public class Portal : MonoBehaviour
 	[SerializeField]
 	Material inactiveMat;
 
+    [SerializeField]
 	bool activated = true;
-
-    int testing = 1;
 
     List<PortalableObject> trackedTravellers;
 
@@ -49,6 +49,8 @@ public class Portal : MonoBehaviour
         ProtectScreenFromClipping();
 
         allPortals.Add(this);
+
+        if (!activated) Deactivate();
     }
 
     void ProtectScreenFromClipping()
@@ -118,9 +120,7 @@ public class Portal : MonoBehaviour
 
             viewTexture = new RenderTexture(Screen.width, Screen.height, 0);
 
-            portalCam.targetTexture = viewTexture;
-
-            screen.material.SetTexture("_MainTex", viewTexture);
+            if (activated) screen.material.SetTexture("_MainTex", viewTexture);
         }
     }
 
@@ -194,7 +194,7 @@ public class Portal : MonoBehaviour
     public void Activate() {
         activated = true;
 
-        linkedPortal.RefreshTexture();
+        RefreshTexture();
 
         screen.material = activeMat;
         GetComponentInChildren<BoxCollider>().isTrigger = true;
@@ -209,8 +209,6 @@ public class Portal : MonoBehaviour
 
     public void SwitchTarget(Portal _newPortal) {
         linkedPortal = _newPortal;
-
-        screen.material.SetTexture("_MainTex", linkedPortal.viewTexture);
 
         Activate();
     }
