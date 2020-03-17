@@ -20,13 +20,18 @@ public class settingsManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
-        UpdateEffectVolumeFields(PlayerPrefs.GetFloat("effectVolume"));
-        UpdateMasterVolumeFields(PlayerPrefs.GetFloat("masterVolume"));
-        UpdateMusicVolumeFields(PlayerPrefs.GetFloat("musicVolume"));
-        UpdateSensitivityFields(PlayerPrefs.GetFloat("sensitivity"));
-        UpdateFieldOfViewFields(PlayerPrefs.GetFloat("fieldOfView"));
-        UpdateShowTimerField(PlayerPrefs.GetInt("showTimer") == 1);
+        if(PlayerPrefs.GetFloat("effectVolume", -1.0f) == -1.0f) { PlayerPrefs.SetFloat("effectVolume", 1.0f); }
+        UpdateEffectVolumeFields(PlayerPrefs.GetFloat("effectVolume", 1.0f));
+        if (PlayerPrefs.GetFloat("masterVolume", -1.0f) == -1.0f) { PlayerPrefs.SetFloat("masterVolume", 1.0f); }
+        UpdateMasterVolumeFields(PlayerPrefs.GetFloat("masterVolume", 1.0f));
+        if (PlayerPrefs.GetFloat("musicVolume", -1.0f) == -1.0f) { PlayerPrefs.SetFloat("musicVolume", 1.0f); }
+        UpdateMusicVolumeFields(PlayerPrefs.GetFloat("musicVolume", 1.0f));
+        if (PlayerPrefs.GetFloat("sensitivity", -1.0f) == -1.0f) { PlayerPrefs.SetFloat("sensitivity", 1.0f); }
+        UpdateSensitivityFields(PlayerPrefs.GetFloat("sensitivity", 1.0f));
+        if (PlayerPrefs.GetFloat("fieldOfView", -1.0f) == -1.0f) { PlayerPrefs.SetFloat("fieldOfView", 80.0f); }
+        UpdateFieldOfViewFields(PlayerPrefs.GetFloat("fieldOfView", 80.0f));
+        if (PlayerPrefs.GetInt("showTimer", -1) == -1) { PlayerPrefs.SetInt("showTimer", 1); }
+        UpdateShowTimerField(PlayerPrefs.GetInt("showTimer", 1) == 1);
         Tween t = fadePanel.DOFade(0.0f, 0.5f).SetEase(Ease.InOutCubic);
         DOTween.Play(t);
     }

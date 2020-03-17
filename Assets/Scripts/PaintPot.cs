@@ -27,7 +27,7 @@ public class PaintPot : MonoBehaviour
             reticle.SetActive(true);
             reticle.transform.rotation = Quaternion.identity;
 
-            Physics.SphereCast(transform.position, 0.5f, new Vector3(0.0f, -1.0f, 0.0f), out hitVar, 6000.0f, LayerMask.GetMask("Ground"));
+            Physics.SphereCast(transform.position, 0.5f, new Vector3(0.0f, -1.0f, 0.0f), out hitVar, 12000.0f, LayerMask.GetMask("Ground"));
             reticle.transform.position = transform.position - new Vector3(0.0f, hitVar.distance, 0.0f);
 
         }

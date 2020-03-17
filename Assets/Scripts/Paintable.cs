@@ -32,7 +32,7 @@ public class Paintable : MonoBehaviour
         return painted;
     }
 
-    public void Paint()
+    public virtual void Paint()
     {
         painted = true;
         obj_renderer.material = mat_painted;
