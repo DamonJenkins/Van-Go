@@ -119,8 +119,6 @@ public class Portal : MonoBehaviour
 
             viewTexture = new RenderTexture(Screen.width, Screen.height, 0);
 
-            portalCam.targetTexture = viewTexture;
-
             if (activated) screen.material.SetTexture("_MainTex", viewTexture);
         }
     }
@@ -210,8 +208,6 @@ public class Portal : MonoBehaviour
 
     public void SwitchTarget(Portal _newPortal) {
         linkedPortal = _newPortal;
-
-        screen.material.SetTexture("_MainTex", linkedPortal.viewTexture);
 
         Activate();
     }
