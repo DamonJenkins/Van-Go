@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4520172757699642639}
   - component: {fileID: 3462378870731834994}
   - component: {fileID: 4823433484725342196}
+  - component: {fileID: 1988860699234338392}
   m_Layer: 0
   m_Name: PaintGlob
   m_TagString: paintGlob
@@ -123,3 +124,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: feabfce8ae0ee484084a929c7782278e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  paintBurst: {fileID: 740785922784560876, guid: 09d9740705e3c9941bd85c20afd69f1b,
+    type: 3}
+--- !u!114 &1988860699234338392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4783138272124322574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f93d49c8c74a17b408f2fcf75736ec45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  portalRot: {x: 0, y: 0, z: 0, w: 0}
+  previousOffsetFromPortal: {x: 0, y: 0, z: 0}

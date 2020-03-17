@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -48,7 +49,8 @@ public class PlayerMovement : MonoBehaviour
 	private Vector3 originalPotPos;
 	private Quaternion originalPotRot;
 
-
+	private float sensitivity = 1.0f;
+	private Transform furthestBone;
 	// Start is called before the first frame update
 	void Start()
     {
@@ -61,6 +63,17 @@ public class PlayerMovement : MonoBehaviour
 		throwForce = GetComponent<PlayerMovement>().GetThrowForce();
 		//paintGlob.SetActive(false);
 		strokeLeft = maxStrokes;
+
+		GetComponentInChildren<Camera>().fieldOfView = PlayerPrefs.GetFloat("fieldOfView");
+		Portal.UpdatePortalFOV();
+		sensitivity = PlayerPrefs.GetFloat("sensitivity");
+
+		furthestBone = paintBrush.GetComponent<SkinnedMeshRenderer>().rootBone;
+		while(furthestBone.childCount > 0)
+		{
+			furthestBone = furthestBone.GetChild(0);
+		}
+
 	}
 
     // Update is called once per frame
@@ -147,12 +160,16 @@ public class PlayerMovement : MonoBehaviour
 
 		if (isHoldingPot) strokeLeft = maxStrokes;
 
-		if (Input.GetButtonDown("Fire1") && /*!paintGlob.activeSelf &&*/ maxStrokes > 0)
+		if (Input.GetButtonDown("Fire1") && strokeLeft > 0 )
 		{
-			paintGlob.SetActive(true);
-			paintGlob.transform.position = paintBrush.transform.position;
-			paintGlob.GetComponent<Rigidbody>().velocity = Vector3.zero;
-			paintGlob.GetComponent<Rigidbody>().AddForce(GetComponentInChildren<Camera>().transform.forward * throwForce);
+			
+			DOTween.Play(DOTween.Sequence().AppendInterval(0.4f).AppendCallback(() => {
+				GameObject pg = Instantiate(paintGlob);
+				pg.transform.position = furthestBone.position;
+				pg.GetComponent<Rigidbody>().velocity = Vector3.zero;
+				pg.GetComponent<Rigidbody>().AddForce(GetComponentInChildren<Camera>().transform.forward * throwForce);
+			}));
+
 			strokeLeft--;
 
 			GetComponent<Animator>().SetTrigger("Fire");

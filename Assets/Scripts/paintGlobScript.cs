@@ -17,7 +17,10 @@ public class paintGlobScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (transform.position.y < -1000.0f)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -27,8 +30,8 @@ public class paintGlobScript : MonoBehaviour
             collision.transform.GetComponent<Paintable>().Paint();
         }
 
-        Instantiate(paintBurst, collision.GetContact(0).point, Quaternion.LookRotation(collision.GetContact(0).normal, Vector3.up));
-        gameObject.SetActive(false);
+        Destroy(Instantiate(paintBurst, collision.GetContact(0).point, Quaternion.LookRotation(collision.GetContact(0).normal, Vector3.up)), paintBurst.GetComponent<ParticleSystem>().main.duration);
+        Destroy(gameObject);
     }
 
 
