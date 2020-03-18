@@ -64,9 +64,9 @@ public class PlayerMovement : MonoBehaviour
 		//paintGlob.SetActive(false);
 		strokeLeft = maxStrokes;
 
-		GetComponentInChildren<Camera>().fieldOfView = PlayerPrefs.GetFloat("fieldOfView");
+		GetComponentInChildren<Camera>().fieldOfView = PlayerPrefs.GetFloat("fieldOfView", 80.0f);
 		Portal.UpdatePortalFOV();
-		sensitivity = PlayerPrefs.GetFloat("sensitivity");
+		sensitivity = PlayerPrefs.GetFloat("sensitivity", 1.0f);
 
 		furthestBone = paintBrush.GetComponent<SkinnedMeshRenderer>().rootBone;
 		while(furthestBone.childCount > 0)
