@@ -32,7 +32,9 @@ public class PaintPot : MonoBehaviour
             Physics.SphereCast(transform.position, 0.5f, new Vector3(0.0f, -1.0f, 0.0f), out hitVar, 12000.0f, LayerMask.GetMask("Ground"));
             reticle.transform.position = transform.position - new Vector3(0.0f, hitVar.distance, 0.0f);
 
-			//potParticle.Play();
+			ParticleSystem.EmissionModule emMod = potParticle.emission;
+
+			emMod.enabled = true;
 
 		}
 		else {
@@ -45,7 +47,9 @@ public class PaintPot : MonoBehaviour
             potPos.z = posRect.position.z;
             posRect.position = potPos;
 
-			//potParticle.Stop();
+			ParticleSystem.EmissionModule emMod = potParticle.emission;
+
+			emMod.enabled = false;
 		}
 	}
 
