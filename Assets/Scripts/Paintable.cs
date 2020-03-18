@@ -11,7 +11,7 @@ public class Paintable : MonoBehaviour
     [SerializeField]
     protected Material mat_unpainted, mat_painted;
 
-    public UnityEvent managerEvent;
+    List<UnityEvent> managerEvents;
 
     protected bool painted = false;
 
@@ -36,6 +36,13 @@ public class Paintable : MonoBehaviour
     {
         painted = true;
         obj_renderer.material = mat_painted;
-        managerEvent.Invoke();
+
+        for (int i = 0; i < managerEvents.Count; i++) {
+            managerEvents[i].Invoke();
+        }
+    }
+
+    public void AddManagerEvent(UnityEvent _event) {
+        managerEvents.Add(_event);
     }
 }

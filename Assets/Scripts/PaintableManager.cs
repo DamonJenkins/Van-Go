@@ -5,20 +5,20 @@ using UnityEngine.Events;
 public class PaintableManager : MonoBehaviour
 {
     [SerializeField]
-    List<Paintable> managedPaintables;
+    protected List<Paintable> managedPaintables;
     [SerializeField]
     List<Portal> managedPortals;
 
     UnityEvent myEvent;
 
-    void Start()
+    public virtual void Start()
     {
         myEvent = new UnityEvent();
 
         myEvent.AddListener(CheckPaintables);
 
         for (int i = 0; i < managedPaintables.Count; i++) {
-            managedPaintables[i].managerEvent = myEvent;
+            managedPaintables[i].AddManagerEvent(myEvent);
         }
     }
 
