@@ -193,18 +193,18 @@ public class Portal : MonoBehaviour
 
     public void Activate() {
         activated = true;
-		gameObject.SetActive(true);
+		screen.gameObject.SetActive(true);
 
 
 		RefreshTexture();
 
         screen.material = activeMat;
-        GetComponentInChildren<BoxCollider>().isTrigger = true;
+        //screen.GetComponent<BoxCollider>().isTrigger = true;
     }
 
     public void Deactivate() {
         activated = false;
-		gameObject.SetActive(false);
+        screen.gameObject.SetActive(false);
 
         //screen.material = inactiveMat;
         //GetComponentInChildren<BoxCollider>().isTrigger = false;
