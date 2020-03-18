@@ -129,6 +129,8 @@ public class PlayerMovement : MonoBehaviour
 					isHoldingPot = false;
 					pot.transform.parent = null;
 
+					GetComponent<Animator>().SetTrigger("Throw");
+
 					pot.GetComponent<BoxCollider>().isTrigger = false;
 					pot.GetComponent<Rigidbody>().isKinematic = false;
 					pot.GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.Continuous;
