@@ -11,6 +11,8 @@ public class LampPostPaintable : Paintable
     // Start is called before the first frame update
     void Start()
     {
+        obj_renderer = GetComponent<MeshRenderer>();
+        obj_renderer.material = mat_unpainted;
         pointLight = GetComponentInChildren<Light>();
         pSystem = GetComponentInChildren<ParticleSystem>();
     }
