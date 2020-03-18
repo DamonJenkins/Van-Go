@@ -16,8 +16,10 @@ public class EndMenuScript : MonoBehaviour
     {
         DOTween.Play(fadePanel.DOFade(0.0f, 0.5f).SetEase(Ease.InOutCubic));
 
-        Debug.Log("TODO: Add score value changing");
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
+        GameObject.Find("ScoreText").GetComponent<Text>().text = string.Format("{0:00:00.00}s", FindObjectOfType<GameManager>().GetTimer()).Replace(".", ":");
     }
 
     // Update is called once per frame

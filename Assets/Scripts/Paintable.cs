@@ -15,6 +15,10 @@ public class Paintable : MonoBehaviour
 
     protected bool painted = false;
 
+    private void Awake(){
+        managerEvents = new List<UnityEvent>();
+    }
+
     // Start is called before the first frame update
     void Start()
     {

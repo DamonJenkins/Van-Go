@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+		DontDestroyOnLoad(gameObject);
+
 		timerVisible = PlayerPrefs.GetInt("showTimer", 0) == 1;
 
 		timerText = GameObject.Find("TimerText").GetComponent<Text>();
@@ -20,8 +22,6 @@ public class GameManager : MonoBehaviour
 		if (!timerVisible) {
 			timerText.gameObject.SetActive(false);
 		}
-
-		StartTimer();
     }
 
     // Update is called once per frame
@@ -37,11 +37,16 @@ public class GameManager : MonoBehaviour
     }
 
 	public void StartTimer() {
+		timerVal = 0.0f;
 		timeRunning = true;
 	}
 
 	public void StopTimer()
 	{
 		timeRunning = false;
+	}
+
+	public float GetTimer() {
+		return timerVal;
 	}
 }

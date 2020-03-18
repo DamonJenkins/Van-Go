@@ -10,5 +10,8 @@ public class EndPortal : Portal
 		if (_traveller.name == "Player") {
 			SceneManager.LoadScene("EndMenu");
 		}
+
+		FindObjectOfType<GameManager>().StopTimer();
+
 	}
 }
