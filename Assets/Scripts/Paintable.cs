@@ -7,13 +7,13 @@ using UnityEngine.Events;
 public class Paintable : MonoBehaviour
 {
 
-    MeshRenderer obj_renderer;
+    protected MeshRenderer obj_renderer;
     [SerializeField]
-    Material mat_unpainted, mat_painted;
+    protected Material mat_unpainted, mat_painted;
 
     public UnityEvent managerEvent;
 
-    bool painted = false;
+    protected bool painted = false;
 
     // Start is called before the first frame update
     void Start()

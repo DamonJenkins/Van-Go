@@ -193,8 +193,10 @@ public class Portal : MonoBehaviour
 
     public void Activate() {
         activated = true;
+		gameObject.SetActive(true);
 
-        RefreshTexture();
+
+		RefreshTexture();
 
         screen.material = activeMat;
         GetComponentInChildren<BoxCollider>().isTrigger = true;
@@ -202,9 +204,10 @@ public class Portal : MonoBehaviour
 
     public void Deactivate() {
         activated = false;
+		gameObject.SetActive(false);
 
-        screen.material = inactiveMat;
-        GetComponentInChildren<BoxCollider>().isTrigger = false;
+        //screen.material = inactiveMat;
+        //GetComponentInChildren<BoxCollider>().isTrigger = false;
     }
 
     public void SwitchTarget(Portal _newPortal) {
@@ -218,7 +221,6 @@ public class Portal : MonoBehaviour
     }
 
     private void UpdateFOV() {
-        Debug.Log(name);
         portalCam.fieldOfView = PlayerPrefs.GetFloat("fieldOfView", playerCam.fieldOfView);
     }
 }
