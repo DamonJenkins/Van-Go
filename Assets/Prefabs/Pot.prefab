@@ -220,6 +220,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawIcon: 0
+  potParticle: {fileID: 9126943093309656872}
 --- !u!1001 &695992023109291477
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -417,6 +418,11 @@ PrefabInstance:
       propertyPath: lengthInSec
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8575350041462571773, guid: a7638fb3702324040b601bd93b451d99,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8575350041462571774, guid: a7638fb3702324040b601bd93b451d99,
         type: 3}
       propertyPath: m_RenderMode
@@ -507,6 +513,12 @@ PrefabInstance:
 --- !u!4 &9126943093309656874 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8575350041462571775, guid: a7638fb3702324040b601bd93b451d99,
+    type: 3}
+  m_PrefabInstance: {fileID: 695992023109291477}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &9126943093309656872 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8575350041462571773, guid: a7638fb3702324040b601bd93b451d99,
     type: 3}
   m_PrefabInstance: {fileID: 695992023109291477}
   m_PrefabAsset: {fileID: 0}

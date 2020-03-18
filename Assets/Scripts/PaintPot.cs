@@ -11,6 +11,8 @@ public class PaintPot : MonoBehaviour
     Camera playerCam;
     public bool drawIcon = false;
 
+	[SerializeField]
+	ParticleSystem potParticle;
 
     private void Start()
     {
@@ -30,8 +32,10 @@ public class PaintPot : MonoBehaviour
             Physics.SphereCast(transform.position, 0.5f, new Vector3(0.0f, -1.0f, 0.0f), out hitVar, 12000.0f, LayerMask.GetMask("Ground"));
             reticle.transform.position = transform.position - new Vector3(0.0f, hitVar.distance, 0.0f);
 
-        }
-        else {
+			//potParticle.Play();
+
+		}
+		else {
             reticle.SetActive(false);
 
             Vector3 potPos = playerCam.WorldToScreenPoint(transform.position);
@@ -40,8 +44,10 @@ public class PaintPot : MonoBehaviour
             potIcon.SetActive(potPos.z > 0 && drawIcon);
             potPos.z = posRect.position.z;
             posRect.position = potPos;
-        }
-    }
+
+			//potParticle.Stop();
+		}
+	}
 
     private void OnCollisionEnter(Collision _collision)
     {

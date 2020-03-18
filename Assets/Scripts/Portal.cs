@@ -29,7 +29,10 @@ public class Portal : MonoBehaviour
 	[SerializeField]
 	Material inactiveMat;
 
-    [SerializeField]
+	float nearClipOffset = 0.05f;
+	float nearClipLimit = 0.2f;
+
+	[SerializeField]
 	bool activated = true;
 
     List<PortalableObject> trackedTravellers;
@@ -74,6 +77,9 @@ public class Portal : MonoBehaviour
             return;
         }
 
+		float camDist = Vector3.Distance(transform.position, portalCam.transform.position);
+		portalCam.nearClipPlane = camDist;
+
         for (int i = 0; i < trackedTravellers.Count; i++) {
             PortalableObject traveller = trackedTravellers[i];
             Transform travellerT = traveller.transform;
@@ -86,6 +92,7 @@ public class Portal : MonoBehaviour
             {
                 Matrix4x4 m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * travellerT.localToWorldMatrix;
                 traveller.Teleport(transform, linkedPortal.transform, m.GetColumn(3), m.rotation);
+				TeleportTraveller(traveller);
 
                 //linkedPortal.OnTravellerEnterPortal(traveller);
                 trackedTravellers.RemoveAt(i);
@@ -94,6 +101,26 @@ public class Portal : MonoBehaviour
             else {
                 traveller.previousOffsetFromPortal = offsetFromPortal;
             }
+        }
+    }
+
+	void SetNearClipPlane () {
+        Transform clipPlane = linkedPortal.transform;
+        int dot = System.Math.Sign (Vector3.Dot (clipPlane.forward, linkedPortal.transform.position - linkedPortal.portalCam.transform.position));
+
+        Vector3 camSpacePos = linkedPortal.portalCam.worldToCameraMatrix.MultiplyPoint (clipPlane.position);
+        Vector3 camSpaceNormal = linkedPortal.portalCam.worldToCameraMatrix.MultiplyVector (clipPlane.forward) * dot;
+        float camSpaceDst = -Vector3.Dot (camSpacePos, camSpaceNormal) + nearClipOffset;
+
+        // Don't use oblique clip plane if very close to portal as it seems this can cause some visual artifacts
+        if (Mathf.Abs (camSpaceDst) > nearClipLimit) {
+            Vector4 clipPlaneCameraSpace = new Vector4 (camSpaceNormal.x, camSpaceNormal.y, camSpaceNormal.z, camSpaceDst);
+
+			// Update projection based on new clip plane
+			// Calculate matrix with player cam so that player camera settings (fov, etc) are used
+			linkedPortal.portalCam.projectionMatrix = playerCam.CalculateObliqueMatrix (clipPlaneCameraSpace);
+        } else {
+            linkedPortal.portalCam.projectionMatrix = playerCam.projectionMatrix;
         }
     }
 
@@ -140,12 +167,14 @@ public class Portal : MonoBehaviour
         Matrix4x4 m = linkedPortal.transform.localToWorldMatrix * transform.worldToLocalMatrix * playerCam.transform.localToWorldMatrix;
         linkedPortal.portalCam.transform.SetPositionAndRotation(m.GetColumn(3), m.rotation);
 
-        linkedPortal.portalCam.Render();
+		SetNearClipPlane();
+
+		linkedPortal.portalCam.Render();
 
         Graphics.Blit(linkedPortal.portalCam.targetTexture, viewTexture);
 
         linkedPortal.screen.enabled = true;
-    }
+}
 
 
 
@@ -223,4 +252,8 @@ public class Portal : MonoBehaviour
     private void UpdateFOV() {
         portalCam.fieldOfView = PlayerPrefs.GetFloat("fieldOfView", playerCam.fieldOfView);
     }
+
+	public virtual void TeleportTraveller(PortalableObject _traveller) { 
+	
+	}
 }
